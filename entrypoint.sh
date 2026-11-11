@@ -36,6 +36,11 @@ pid /tmp/nginx.pid;
 events { worker_connections 256; }
 http {
   access_log /dev/stdout;
+  client_body_temp_path /tmp/nginx-tmp/client_body;
+  proxy_temp_path /tmp/nginx-tmp/proxy;
+  fastcgi_temp_path /tmp/nginx-tmp/fastcgi;
+  uwsgi_temp_path /tmp/nginx-tmp/uwsgi;
+  scgi_temp_path /tmp/nginx-tmp/scgi;
   server {
     listen 0.0.0.0:${PORT};
     location = ${WS_PATH} {
@@ -55,5 +60,6 @@ http {
   }
 }
 EOF
+mkdir -p /tmp/nginx-tmp/client_body /tmp/nginx-tmp/proxy /tmp/nginx-tmp/fastcgi /tmp/nginx-tmp/uwsgi /tmp/nginx-tmp/scgi
 /usr/local/bin/xray run -c /etc/xray/config.json &
 exec nginx -c /etc/nginx/nginx.conf
